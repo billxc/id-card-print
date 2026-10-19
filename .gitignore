@@ -1,0 +1,47 @@
+# Local runtimes and caches
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.DS_Store
+
+# Private configuration and scratch files
+.env
+.env.*
+*.key
+*.pem
+*.p12
+*.pfx
+*.log
+*.sqlite*
+.claude/
+.agents/
+.artifacts/
+.vscode/
+.idea/
+uploads/
+outputs/
+screenshots/
+
+# Never commit personal photos or generated PDFs
+*.pdf
+*.jpg
+*.jpeg
+*.png
+*.heic
+*.heif
+*.webp
+*.tif
+*.tiff
+*.bmp
+*.PDF
+*.JPG
+*.JPEG
+*.PNG
+*.HEIC
+*.HEIF
+*.WEBP
+*.TIF
+*.TIFF
+*.BMP

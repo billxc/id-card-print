@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="local-token" content="__LOCAL_TOKEN__">
+  <meta name="color-scheme" content="light dark">
+  <title>原寸证件排版</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/static/app.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <div class="shell">
+    <header class="masthead">
+      <a class="brand" href="/" aria-label="原寸证件排版首页"><span class="brand-mark" aria-hidden="true"></span><span>原寸 <small>PRINT STUDIO</small></span></a>
+      <span class="local-badge"><span aria-hidden="true"></span>仅本机处理</span>
+    </header>
+    <main>
+      <section class="intro" aria-labelledby="page-title">
+        <div><p class="eyebrow">身份证 · 双证四面</p><h1 id="page-title">四个卡面，<br class="mobile-break">一张 A4。</h1><p class="intro-copy">裁好边缘，校正透视，按真实尺寸排版。<br>照片不会发送到第三方，刷新页面即清空本次工作。</p></div>
+        <div class="size-note"><span class="size-number">1:1</span><span>85.6 × 54 mm<br>每个卡面的打印尺寸</span></div>
+      </section>
+      <div class="workspace">
+        <section class="uploads" aria-labelledby="upload-title">
+          <div class="section-heading"><h2 id="upload-title"><span class="step-number">01</span>上传与裁切</h2><button id="clear-all" class="text-button" disabled>清空全部</button></div>
+          <p class="section-copy">每格放一张照片。自动识别后，请确认四角和正反方向。</p>
+          <div id="card-groups"></div>
+          <p class="file-note">JPG / PNG / HEIC 等 · 每张 ≤ 12 MB、25 MP<br>四角完整入镜、背景有反差，自动识别会更准确。</p>
+        </section>
+        <aside class="output" aria-labelledby="output-title">
+          <div class="section-heading"><h2 id="output-title"><span class="step-number">02</span>排版与导出</h2><span id="ready-count" class="ready-count">0 / 4 已确认</span></div>
+          <div class="paper-workbench">
+            <div class="paper-top-label"><span>A4 · 纵向</span><span>210 × 297 mm</span></div>
+            <div id="paper" class="paper" aria-label="A4 排版预览，第一行为第一张身份证，第二行为第二张身份证">
+              <div class="paper-card" id="paper-card-0"><span>第一张 · 正面</span></div>
+              <div class="paper-card" id="paper-card-1"><span>第一张 · 反面</span></div>
+              <div class="paper-card" id="paper-card-2"><span>第二张 · 正面</span></div>
+              <div class="paper-card" id="paper-card-3"><span>第二张 · 反面</span></div>
+            </div>
+            <p class="preview-caption">布局预览 · 屏幕显示不代表实际尺寸</p>
+          </div>
+          <section class="watermark-options" aria-labelledby="watermark-title">
+            <label id="watermark-title" class="watermark-toggle" for="watermark-enabled"><input id="watermark-enabled" type="checkbox">添加用途水印</label>
+            <fieldset id="watermark-fields" disabled hidden>
+              <label for="watermark-text">水印文字</label>
+              <input id="watermark-text" type="text" maxlength="40" value="仅供本次办理业务使用" placeholder="例如：仅供办理 XX 业务使用" autocomplete="off" spellcheck="false">
+              <div class="watermark-grid">
+                <label for="watermark-size">字号（pt）<input id="watermark-size" type="number" min="6" max="36" step="1" value="12"></label>
+                <label for="watermark-angle">角度（°）<input id="watermark-angle" type="number" min="-90" max="90" step="1" value="-30"></label>
+              </div>
+              <label for="watermark-density">密度 <output id="density-value" for="watermark-density">3 / 5</output></label>
+              <input id="watermark-density" type="range" min="1" max="5" step="1" value="3">
+              <label for="watermark-transparency">透明度 <output id="transparency-value" for="watermark-transparency">75%</output></label>
+              <input id="watermark-transparency" type="range" min="0" max="95" step="5" value="75">
+              <p class="watermark-note">密度越高，排列越紧；透明度越高，颜色越淡。水印统一应用四个卡面，不改变尺寸和裁切。</p>
+            </fieldset>
+            <p id="watermark-status" class="watermark-note" role="status" aria-live="polite" hidden></p>
+          </section>
+          <section class="grayscale-options">
+            <label class="watermark-toggle" for="grayscale-enabled"><input id="grayscale-enabled" type="checkbox" aria-describedby="grayscale-help">黑白 PDF（灰度）</label>
+            <p id="grayscale-help" class="watermark-note">卡面和水印一起转灰度，保留人像与文字的明暗细节。A4 预览同步变化，裁切编辑和原照片仍保留彩色。</p>
+          </section>
+          <section class="grayscale-options">
+            <label class="watermark-toggle" for="jpeg-enabled"><input id="jpeg-enabled" type="checkbox" checked aria-describedby="jpeg-help">高质量 JPEG 压缩（推荐）</label>
+            <p id="jpeg-help" class="watermark-note">默认开启：质量 95，保留完整色彩采样，减小 PDF 体积。不降低所选分辨率；取消勾选改用无损图片压缩。</p>
+          </section>
+          <div class="export-options"><label for="dpi">输出清晰度</label><select id="dpi"><option value="300">300 DPI · 标准打印</option><option value="600">600 DPI · 高清打印</option></select></div>
+          <button id="download" class="primary-button download-button" disabled><span>下载 A4 PDF</span><span aria-hidden="true">↓</span></button>
+          <p id="download-hint" class="download-hint">确认全部四个卡面后即可下载</p>
+          <div class="print-note"><strong>打印时，记得选择 100%。</strong><p>纸张选 A4，选择「实际大小」，关闭「适合页面」。每张纸打印 1 页。</p></div>
+        </aside>
+      </div>
+      <div id="message" class="message" role="status" aria-live="polite" hidden></div>
+    </main>
+    <footer><span>照片不写入服务端磁盘 · 不使用浏览器持久存储</span><span>请妥善保管下载后的 PDF</span></footer>
+  </div>
+
+  <dialog id="crop-dialog" aria-labelledby="editor-title" aria-describedby="editor-help">
+    <div class="editor-header"><div><p class="eyebrow">校准卡面</p><h2 id="editor-title">调整裁切四角</h2></div><button id="close-editor" class="icon-button" aria-label="关闭裁切窗口">×</button></div>
+    <p id="editor-help" class="editor-help">拖动蓝色圆点，让四边贴合完整卡片外缘。也可按 Tab 选中圆点，用方向键微调。</p>
+    <div class="editor-body">
+      <div class="source-panel">
+        <div class="source-toolbar"><span>原始照片</span><button id="reset-corners" class="text-button">重新选四角</button></div>
+        <div id="photo-stage" class="photo-stage"><img id="source-image" alt="待裁切的身份证照片" draggable="false"><svg id="corner-overlay" xmlns="http://www.w3.org/2000/svg" aria-label="裁切四角编辑区域"></svg></div>
+        <p id="corner-status" class="corner-status" aria-live="polite"></p>
+      </div>
+      <div class="crop-panel"><div class="source-toolbar"><span>矫正后的卡面</span><span class="dimension-label">85.6 × 54 mm</span></div><div class="crop-result"><img id="crop-image" alt="裁切后的完整卡面" hidden><p id="crop-placeholder">选四角后查看裁切效果</p></div><p id="crop-caption" class="crop-caption">检查文字是否完整、方向是否正确。</p><div class="export-options"><label for="inset-px">向内裁切（每边）</label><select id="inset-px" aria-describedby="inset-help"><option value="0">0 px · 不裁切</option><option value="1">1 px</option><option value="2">2 px</option><option value="3">3 px</option><option value="4">4 px</option><option value="5">5 px</option><option value="6">6 px</option><option value="8">8 px</option><option value="10">10 px</option><option value="15">15 px</option><option value="20">20 px</option></select></div><p id="inset-help" class="editor-tip">去黑边建议先试 2–4 px。以 300 DPI 为基准，四边同时内缩，不移动原图四角。裁后轻微放大填满原尺寸，注意别切掉文字。</p><div class="crop-actions"><button id="rotate-card" class="secondary-button">旋转 180°</button><button id="preview-crop" class="secondary-button">更新预览</button></div><p class="editor-tip">圆角处选直边延长线的交点，输出会裁成约 3 mm 圆角。自动识别分析颜色与边缘，不识别或改动证件文字。</p></div>
+    </div>
+    <div id="editor-error" class="editor-error" role="alert" hidden></div>
+    <div class="editor-footer"><button id="cancel-editor" class="text-button">取消</button><button id="apply-crop" class="primary-button">确认并使用此卡面</button></div>
+  </dialog>
+
+  <template id="slot-template">
+    <article class="upload-slot">
+      <div class="slot-top"><h4></h4><span class="slot-status">待上传</span></div>
+      <button class="upload-area" type="button"><img class="slot-image" alt="" hidden><span class="upload-empty"><span class="upload-icon" aria-hidden="true">＋</span><span>选择照片</span><small>或拖入此处</small></span><span class="slot-overlay" hidden>编辑裁切</span></button>
+      <input class="file-input" type="file" accept="image/*,.heic,.heif" hidden>
+      <p class="slot-name">未选择文件</p>
+      <div class="slot-actions"><button class="replace-button text-button" disabled>替换照片</button><button class="remove-button text-button" disabled>移除</button></div>
+      <p class="slot-error" role="alert" hidden></p>
+    </article>
+  </template>
+</body>
+</html>
